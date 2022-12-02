@@ -1,14 +1,20 @@
 import React from 'react';
-import { Node } from './Node'
+import { GeometryNode, NumberNode, OutputNode, PlaneNode } from './Node'
 import { Toolbar } from './Toolbar';
 
 import './Components.scss'
 
 export class NodeEditor extends React.Component {
+  components = {
+    output: OutputNode,
+    number: NumberNode,
+    geometry: GeometryNode,
+    plane: PlaneNode
+  }
+
   constructor(props) {
     super(props);
     this.state = {
-      nodes: [],
       selectedNode: null,
       selectedTool: null,
     }
@@ -16,7 +22,15 @@ export class NodeEditor extends React.Component {
 
   render() {
     let classes = 'node-editor';
-    classes += (this.state.selectedTool != null ? ' tool-selected' : ''); 
+    classes += (this.state.selectedTool != null ? ' tool-selected' : '');
+
+    const nodes = this.props.nodes.map((item, i) => {
+      return (
+        <React.Fragment key={'node-' + i}>
+          {item}
+        </React.Fragment>
+      )
+    })
 
     return (
       <>
@@ -25,7 +39,7 @@ export class NodeEditor extends React.Component {
           className={classes}
           onClick={(e) => this.handleClick(e)}
         >
-          {this.state.nodes}
+          {nodes}
         </div>
       </>
     );
@@ -36,10 +50,10 @@ export class NodeEditor extends React.Component {
     if (this.state.selectedTool == null)
       return;
 
-    let { nodes } = this.state;
-    nodes.push(
-      <Node
-        title={this.state.selectedTool}
+    let NodeType = this.components[this.state.selectedTool];
+
+    this.props.onAddNode(
+      <NodeType
         position={{
           x: e.clientX,
           y: e.clientY
@@ -48,18 +62,15 @@ export class NodeEditor extends React.Component {
     );
 
     this.setState({
-      nodes: nodes,
       selectedTool: null,
     });
   }
 
-  selectTool(name) {
+  selectTool(tool) {
     this.setState({
-      selectedTool: name,
-    }, () => { console.log("Selected Tool: " + this.state.selectedTool) });
-
+      selectedTool: tool,
+    });
   }
 }
-
 
 export default NodeEditor;

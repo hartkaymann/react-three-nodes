@@ -60,11 +60,11 @@
   font-weight: bold;
 }
 
-.node form {
-  padding: 10px;
+.node ul {
+  padding: 0px 10px;
 }
 
-.node form input {
+.node ul input {
   float: right;
   width: 100px;
   border: 1px solid var(--main-color);
@@ -72,7 +72,7 @@
   text-align: right;
 }
 
-.node form input[type=number] {
+.node ul input[type=number] {
   background-color: var(--main-bg-color);
 }
 

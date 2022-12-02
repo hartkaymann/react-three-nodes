@@ -8,9 +8,11 @@ function Toolbar(props) {
       className="toolbar"
     >
       <ul>
-        <Tool value="A" onClick={(e) => handleClick(e)} selected={selected} />
-        <Tool value="B" onClick={(e) => handleClick(e)} selected={selected} />
-        <Tool value="C" onClick={(e) => handleClick(e)} selected={selected} />
+        <Tool name="O" value="output" onClick={(e) => handleClick(e)} selected={selected} />
+        <Tool name="N" value="number" onClick={(e) => handleClick(e)} selected={selected} />
+        <Tool name="G" value="geometry" onClick={(e) => handleClick(e)} selected={selected} />
+        <Tool name="P" value="plane" onClick={(e) => handleClick(e)} selected={selected} />
+
       </ul>
     </div>
   );
@@ -23,13 +25,13 @@ function Toolbar(props) {
 
 function Tool(props) {
   return (
-    <li>
+    <li key={props.value.toString()}>
       <button
         value={props.value}
         className={props.selected === props.value ? 'selected' : null}
         onClick={props.onClick}
       >
-        {props.value}
+        {props.name}
       </button>
     </li>
   );
