@@ -34,7 +34,9 @@ export class NodeEditor extends React.Component {
 
     return (
       <>
-        <Toolbar onClick={(tool) => this.selectTool(tool)} />
+        <Toolbar
+          selected={this.state.selectedTool}
+          onClick={(tool) => this.selectTool(tool)} />
         <div
           className={classes}
           onClick={(e) => this.handleClick(e)}

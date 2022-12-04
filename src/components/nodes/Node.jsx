@@ -10,20 +10,21 @@ class Node extends React.Component {
         x: props.position.x,
         y: props.position.y,
       },
-      inputs: props.inputs.reduce((obj, item) => ({ ...obj, [item.label]: item }), {})
+      inputs: props.inputs.reduce((obj, input) => ({ ...obj, [input.label]: input }), {}),
     }
   }
 
   render() {
     // Create inputs
-    const inputs = this.props.inputs.map((input, i) => {
+    const inputs = [];
+    Object.values(this.state.inputs).forEach((input) => {
       const InputType = input.type;
-      return (
-        <li key={'input-' + i}>
+      inputs.push(
+        <li key={'input-' + input.label.toLowerCase()}>
           <InputType
             label={input.label}
             value={input.value}
-            onChange={(e) => this.handleInputChange(e)}
+            onChange={(i, t) => this.handleInputChange(i, t)}
           />
         </li>
       );
@@ -43,11 +44,24 @@ class Node extends React.Component {
     );
   }
 
-  handleInputChange(e) {
-    console.log(e.target);
-
+  /**
+  * Called when an input is changed
+  * @param {String} input - The label of the changed input
+  * @param {Object} target - The  input targeted by the change event 
+  */
+  handleInputChange(input, target) {
     const { inputs } = this.state;
-    inputs[e.target.name].value = e.target.value;
+    if (input === target.name) {
+      inputs[input].value = target.value;
+    } else {
+      // Update value, create if new
+      let val = inputs[input].value;
+      val = {
+        ...val,
+        [target.name]: target.value,
+      };
+      inputs[input].value = val;
+    }
     this.setState({
       inputs: inputs,
     })
@@ -89,7 +103,7 @@ function GeometryNode(props) {
       inputs={[{
         label: 'Position',
         type: Vec3Input,
-        value: null,
+        value: {x: 0, y: 0, z: 0},
       }]}
       position={props.position}
     />
@@ -104,12 +118,12 @@ function PlaneNode(props) {
         {
           label: 'Position',
           type: Vec3Input,
-          value: [0, 0, 0]
+          value: {x: 0, y: 0, z: 0},
         },
         {
           label: 'Dimensions',
           type: Vec2Input,
-          value: [0, 0],
+          value: {x: 0, y: 0 },
         },
         {
           label: 'Color',
