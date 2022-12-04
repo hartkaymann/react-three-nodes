@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 
 function Input(props) {
-  const [value, setValue] = useState(props.default);
 
   let input = null;
   if (props.type !== undefined) {
-    input = <input type={props.type} value={value} onChange={(e) => handleChange(e)} />;
+    input = <input name={props.label} type={props.type} value={props.value} onChange={(e) => props.onChange(e)} />;
   }
 
   return (
@@ -18,10 +17,6 @@ function Input(props) {
       {input}
     </div>
   );
-
-  function handleChange(e) {
-    setValue(e.target.value);
-  }
 }
 
 function NumberInput(props) {
@@ -29,7 +24,8 @@ function NumberInput(props) {
     <Input
       label={props.label}
       type='number'
-      default={2}
+      value={props.value}
+      onChange={(e) => props.onChange(e)}
     />
   );
 }
@@ -39,6 +35,7 @@ function TextInput(props) {
     <Input
       label={props.label}
       type='text'
+      value={props.value}
       default=''
     />
   );
@@ -50,6 +47,7 @@ function ColorInput(props) {
     <Input
       label={props.label ? props.label : 'Color'}
       type='color'
+      value={props.value}
       default='#000000'
     />
   );
@@ -64,8 +62,8 @@ function Vec2Input(props) {
       <label>
         {props.label}
       </label>
-      <input type='number' defaultValue={0.0} />
-      <input type='number' defaultValue={0.0} />
+      <input type='number' value={props.value[0]} />
+      <input type='number' value={props.value[1]} />
     </div>
   );
 }
@@ -78,9 +76,9 @@ function Vec3Input(props) {
       <label>
         {props.label}
       </label>
-      <input type='number' defaultValue={0.0} />
-      <input type='number' defaultValue={0.0} />
-      <input type='number' defaultValue={0.0} />
+      <input type='number' value={props.value[0]} />
+      <input type='number' value={props.value[1]} />
+      <input type='number' value={props.value[2]} />
     </div>
   );
 }

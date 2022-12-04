@@ -1,5 +1,5 @@
 import React from 'react';
-import { GeometryNode, NumberNode, OutputNode, PlaneNode } from './Node'
+import { GeometryNode, NumberNode, OutputNode, PlaneNode } from './nodes/Node'
 import { Toolbar } from './Toolbar';
 
 import './Components.scss'
@@ -24,10 +24,10 @@ export class NodeEditor extends React.Component {
     let classes = 'node-editor';
     classes += (this.state.selectedTool != null ? ' tool-selected' : '');
 
-    const nodes = this.props.nodes.map((item, i) => {
+    const nodes = this.props.nodes.map((node, i) => {
       return (
         <React.Fragment key={'node-' + i}>
-          {item}
+          {node}
         </React.Fragment>
       )
     })
