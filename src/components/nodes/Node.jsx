@@ -20,13 +20,13 @@ class Node extends React.Component {
     Object.values(this.state.inputs).forEach((input) => {
       const InputType = input.type;
       inputs.push(
-        <li key={'input-' + input.label.toLowerCase()}>
+        <React.Fragment key={'input-' + input.label.toLowerCase()}>
           <InputType
             label={input.label}
             value={input.value}
             onChange={(i, t) => this.handleInputChange(i, t)}
           />
-        </li>
+        </React.Fragment>
       );
     })
 

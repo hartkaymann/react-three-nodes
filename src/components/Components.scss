@@ -22,10 +22,17 @@
   overflow: hidden;
 }
 
+.node .node-inputs {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+}
+
 .node .input-wrapper {
   position: relative;
   width: 100%;
-  min-height: 25px;
 }
 
 
