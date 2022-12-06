@@ -1,69 +1,42 @@
-import React from "react";
+import React, { useContext } from "react";
+import { NodesDispatchContext } from "../../App";
 import { ColorInput, Input, NumberInput, Vec2Input, Vec3Input } from "../Input"
 
-class Node extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      title: (props.title !== undefined ? props.title : "Node"),
-      position: {
-        x: props.position.x,
-        y: props.position.y,
-      },
-      inputs: props.inputs.reduce((obj, input) => ({ ...obj, [input.label]: input }), {}),
-    }
-  }
+function Node(props) {
+  const nodesDispatch = useContext(NodesDispatchContext);
 
-  render() {
-    // Create inputs
-    const inputs = [];
-    Object.values(this.state.inputs).forEach((input) => {
-      const InputType = input.type;
-      inputs.push(
-        <React.Fragment key={'input-' + input.label.toLowerCase()}>
-          <InputType
-            label={input.label}
-            value={input.value}
-            onChange={(i, t) => this.handleInputChange(i, t)}
-          />
-        </React.Fragment>
-      );
-    })
-
+  // Create inputs
+  const inputs = props.inputs.map((input, i) => {
+    const InputType = input.type;
     return (
-      <div
-        className='node'
-        style={{
-          left: this.state.position.x,
-          top: this.state.position.y,
-        }}
-      >
-        <p className="title"> {this.props.title}</p>
-        <ul className='node-inputs'> {inputs} </ul>
-      </div >
+      <React.Fragment key={'input-' + input.label.toLowerCase()}>
+        <InputType
+          label={input.label}
+          onChange={(e) => handleChange(e)}
+        />
+      </React.Fragment>
     );
-  }
+  })
 
-  /**
-  * Called when an input is changed
-  * @param {String} input - The label of the changed input
-  * @param {Object} target - The  input targeted by the change event 
-  */
-  handleInputChange(input, target) {
-    const { inputs } = this.state;
-    if (input === target.name) {
-      inputs[input].value = target.value;
-    } else {
-      // Update value, create if new
-      let val = inputs[input].value;
-      val = {
-        ...val,
-        [target.name]: target.value,
-      };
-      inputs[input].value = val;
-    }
-    this.setState({
-      inputs: inputs,
+  return (
+    <div
+      className='node'
+      style={{
+        left: props.position.x,
+        top: props.position.y,
+      }}
+    >
+      <p className="title"> {props.title}</p>
+      <ul className='node-inputs'> {inputs} </ul>
+    </div >
+  );
+
+  function handleChange(e) {
+    nodesDispatch({
+      type: 'change',
+      payload: {
+        node: "key",
+      }
     })
   }
 }
@@ -103,7 +76,7 @@ function GeometryNode(props) {
       inputs={[{
         label: 'Position',
         type: Vec3Input,
-        value: {x: 0, y: 0, z: 0},
+        value: { x: 0, y: 0, z: 0 },
       }]}
       position={props.position}
     />
@@ -118,12 +91,12 @@ function PlaneNode(props) {
         {
           label: 'Position',
           type: Vec3Input,
-          value: {x: 0, y: 0, z: 0},
+          value: { x: 0, y: 0, z: 0 },
         },
         {
           label: 'Dimensions',
           type: Vec2Input,
-          value: {x: 0, y: 0 },
+          value: { x: 0, y: 0 },
         },
         {
           label: 'Color',
