@@ -26,8 +26,9 @@ function NodeEditor(props) {
   const nodeElements = nodes.map((node, i) => {
     const NodeType = node.type;
     return (
-      <React.Fragment key={node.key}>
+      <React.Fragment key={node.id}>
         <NodeType
+          id={node.id}
           inputs={node.inputs}
           position={node.position}
         />

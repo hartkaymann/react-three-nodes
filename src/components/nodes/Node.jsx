@@ -12,6 +12,7 @@ function Node(props) {
       <React.Fragment key={'input-' + input.label.toLowerCase()}>
         <InputType
           label={input.label}
+          value={input.value}
           onChange={(e) => handleChange(e)}
         />
       </React.Fragment>
@@ -20,6 +21,7 @@ function Node(props) {
 
   return (
     <div
+      id={props.id}
       className='node'
       style={{
         left: props.position.x,
@@ -35,7 +37,9 @@ function Node(props) {
     nodesDispatch({
       type: 'change',
       payload: {
-        node: "key",
+        id: props.id,
+        name: e.target.name,
+        value: e.target.value,
       }
     })
   }
@@ -44,13 +48,13 @@ function Node(props) {
 function OutputNode(props) {
   return (
     <Node
+      {...props}
       title="Output"
       inputs={[{
         label: 'Outputs',
         type: Input,
-        value: null
+        value: null,
       }]}
-      position={props.position}
     />
   );
 }
@@ -58,13 +62,13 @@ function OutputNode(props) {
 function NumberNode(props) {
   return (
     <Node
+      {...props}
       title="Number"
       inputs={[{
         label: 'Number',
         type: NumberInput,
-        value: 0,
+        value: props.inputs !== undefined ? props.inputs['Number'] : 0,
       }]}
-      position={props.position}
     />
   );
 }
@@ -72,13 +76,13 @@ function NumberNode(props) {
 function GeometryNode(props) {
   return (
     <Node
+      {...props}
       title="Geometry"
       inputs={[{
         label: 'Position',
         type: Vec3Input,
-        value: { x: 0, y: 0, z: 0 },
+        value: props.inputs !== undefined ? props.inputs : { x: 0, y: 0, z: 0 },
       }]}
-      position={props.position}
     />
   );
 }
@@ -86,27 +90,26 @@ function GeometryNode(props) {
 function PlaneNode(props) {
   return (
     <Node
+      {...props}
       title='Plane'
       inputs={[
         {
           label: 'Position',
           type: Vec3Input,
-          value: { x: 0, y: 0, z: 0 },
+          value: props.inputs !== undefined ? props.inputs : { x: 0, y: 0, z: 0 },
         },
         {
           label: 'Dimensions',
           type: Vec2Input,
-          value: { x: 0, y: 0 },
+          value: props.inputs !== undefined ? props.inputs : { x: 0, y: 0 },
         },
         {
           label: 'Color',
           type: ColorInput,
-          value: '#000000'
+          value: props.inputs !== undefined ? props.inputs['Color'] : '#000000',
         }
       ]}
-      position={props.position}
     />
-
   );
 }
 

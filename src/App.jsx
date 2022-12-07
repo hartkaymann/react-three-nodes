@@ -17,14 +17,22 @@ function nodesReducer(nodes, action) {
       return ([
         ...nodes,
         {
-          key: 'node-' + nodes.length,
+          id: 'node-' + nodes.length,
           position: action.payload.position,
           type: action.payload.type,
         }
       ]);
     }
     case ACTIONS.CHANGE: {
-      return nodes;
+      return nodes.map((node, i) => {
+        if (node.id === action.payload.id) {
+          node.inputs = {
+            ...(node.inputs),
+            [action.payload.name]: action.payload.value
+          }
+        }
+        return node;
+      });
     }
     default:
       return nodes;
