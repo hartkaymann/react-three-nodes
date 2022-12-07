@@ -11,9 +11,7 @@ function Input(props) {
             name={input.name}
             type={input.type}
             value={input.value}
-            onChange={(e) => {
-              props.onChange(props.label, e.target)
-            }}
+            onChange={(e) => { props.onChange(e) }}
           />
         </React.Fragment>
       );
@@ -43,7 +41,7 @@ function NumberInput(props) {
           value: props.value ? props.value : 0,
         },
       ]}
-      onChange={(i, t) => props.onChange(i, t)}
+      onChange={(e) => props.onChange(e)}
     />
   );
 }
@@ -59,7 +57,7 @@ function TextInput(props) {
           value: props.value ? props.value : '',
         },
       ]}
-      onChange={(i, t) => props.onChange(i, t)}
+      onChange={(e) => props.onChange(e)}
     />
   );
 }
@@ -76,7 +74,7 @@ function ColorInput(props) {
           value: props.value ? props.value : '#000000',
         },
       ]}
-      onChange={(i, t) => props.onChange(i, t)}
+      onChange={(e) => props.onChange(e)}
     />
   );
 }
@@ -90,15 +88,15 @@ function Vec2Input(props) {
         {
           name: 'x',
           type: 'number',
-          value: props.value ? props.value.x : 0,
+          value: props.value.x ? props.value.x : 0,
         },
         {
           name: 'y',
           type: 'number',
-          value: props.value ? props.value.y : 0,
+          value: props.value.y ? props.value.y : 0,
         }
       ]}
-      onChange={(i, t) => props.onChange(i, t)}
+      onChange={(e) => props.onChange(e)}
     />
   );
 }
@@ -111,17 +109,17 @@ function Vec3Input(props) {
         {
           name: 'x',
           type: 'number',
-          value: props.value ? props.value.x : 0,
+          value: props.value.x ? props.value.x : 0,
         },
         {
           name: 'y',
           type: 'number',
-          value: props.value ? props.value.y : 0,
+          value: props.value.y ? props.value.y : 0,
         },
         {
           name: 'z',
           type: 'number',
-          value: props.value ? props.value.z : 0,
+          value: props.value.z ? props.value.z : 0,
         }
       ]}
       onChange={(i, t) => props.onChange(i, t)}

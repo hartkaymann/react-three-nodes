@@ -3,76 +3,73 @@ import { GeometryNode, NumberNode, OutputNode, PlaneNode } from './nodes/Node'
 import { Toolbar } from './Toolbar';
 
 import './Components.scss'
+import { useState } from 'react';
+import { useContext } from 'react';
+import { NodesContext, NodesDispatchContext } from '../App';
 
-export class NodeEditor extends React.Component {
-  components = {
-    output: OutputNode,
-    number: NumberNode,
-    geometry: GeometryNode,
-    plane: PlaneNode
-  }
+const components = {
+  output: OutputNode,
+  number: NumberNode,
+  geometry: GeometryNode,
+  plane: PlaneNode
+}
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedNode: null,
-      selectedTool: null,
-    }
-  }
+function NodeEditor(props) {
+  const [selectedTool, setSelectedTool] = useState(null);
 
-  render() {
-    let classes = 'node-editor';
-    classes += (this.state.selectedTool != null ? ' tool-selected' : '');
+  const nodes = useContext(NodesContext);
+  const nodesDispatch = useContext(NodesDispatchContext);
 
-    const nodes = this.props.nodes.map((node, i) => {
-      return (
-        <React.Fragment key={'node-' + i}>
-          {node}
-        </React.Fragment>
-      )
-    })
+  let classes = 'node-editor';
+  classes += (selectedTool != null ? ' tool-selected' : '');
 
+  const nodeElements = nodes.map((node, i) => {
+    const NodeType = node.type;
     return (
-      <>
-        <Toolbar
-          selected={this.state.selectedTool}
-          onClick={(tool) => this.selectTool(tool)} />
-        <div
-          className={classes}
-          onClick={(e) => this.handleClick(e)}
-        >
-          {nodes}
-        </div>
-      </>
-    );
-  }
+      <React.Fragment key={node.id}>
+        <NodeType
+          id={node.id}
+          inputs={node.inputs}
+          position={node.position}
+        />
+      </React.Fragment>
+    )
+  })
 
-  handleClick(e) {
+  return (
+    <>
+      <Toolbar
+        selected={selectedTool}
+        onClick={(tool) => setSelectedTool(tool)} />
+      <div
+        className={classes}
+        onClick={(e) => handleClick(e)}
+      >
+       {nodeElements}
+      </div>
+    </>
+  );
+
+  function handleClick(e) {
     // Cancel if no tool is selected
-    if (this.state.selectedTool == null)
+    if (selectedTool == null)
       return;
 
-    let NodeType = this.components[this.state.selectedTool];
+    let NodeType = components[selectedTool];
 
-    this.props.onAddNode(
-      <NodeType
-        position={{
+    nodesDispatch({
+      type: 'add',
+      payload: {
+        type: NodeType,
+        position: {
           x: e.clientX,
           y: e.clientY
-        }}
-      />
-    );
-
-    this.setState({
-      selectedTool: null,
+        }
+      }
     });
-  }
 
-  selectTool(tool) {
-    this.setState({
-      selectedTool: tool,
-    });
+    setSelectedTool(null);
   }
 }
 
-export default NodeEditor;
+export { NodeEditor };

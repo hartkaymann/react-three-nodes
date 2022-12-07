@@ -1,56 +1,68 @@
 import React from 'react';
+import { createContext } from 'react';
+import { useReducer } from 'react';
 import './App.scss';
 
 import { NodeEditor } from "./components/NodeEditor"
 import { Scene } from "./components/Scene"
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      nodes: [],
-    }
-  }
-
-  render() {
-    return (
-      <div className='split-screen'>
-        <div className='pane'>
-          <NodeEditor
-            nodes={this.state.nodes}
-            onAddNode={(node) => this.handleAddNode(node)}
-            handleInputUpdate={(node, input, update) => this.handleInputUpdate(node, input, update)}
-          />
-        </div>
-        <div className='pane'>
-          <Scene
-            nodes={this.state.nodes}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  // Add a new node object to state and sets its type
-  handleAddNode(node) {
-    const { nodes } = this.state;
-
-    // Create new node with unique id (as long as deleting nodes is not implemented lul)
-    nodes.push(node);
-
-    this.setState({
-      nodes: nodes,
-    })
-  }
-
-  handleInputUpdate(node, input, value) {
-    const [nodes] = this.state;
-    nodes[node][input] = { value };
-    this.setState({
-      nodes: nodes,
-    })
-  }
-
+const ACTIONS = {
+  ADD: 'add',
+  CHANGE: 'change',
 }
+
+function nodesReducer(nodes, action) {
+  switch (action.type) {
+    case ACTIONS.ADD: {
+      return ([
+        ...nodes,
+        {
+          id: 'node-' + nodes.length,
+          position: action.payload.position,
+          type: action.payload.type,
+        }
+      ]);
+    }
+    case ACTIONS.CHANGE: {
+      return nodes.map((node, i) => {
+        if (node.id === action.payload.id) {
+          node.inputs = {
+            ...(node.inputs),
+            [action.payload.name]: action.payload.value
+          }
+        }
+        return node;
+      });
+    }
+    default:
+      return nodes;
+  }
+}
+
+function App(props) {
+  const [nodes, dispatch] = useReducer(nodesReducer, []);
+
+  return (
+    <NodesContext.Provider value={nodes}>
+      <NodesDispatchContext.Provider value={dispatch}>
+        <div className='split-screen'>
+          <div className='pane'>
+            <NodeEditor
+              nodes={nodes}
+            />
+          </div>
+          <div className='pane'>
+            <Scene
+              nodes={nodes}
+            />
+          </div>
+        </div>
+      </NodesDispatchContext.Provider>
+    </NodesContext.Provider>
+  );
+}
+
+export const NodesContext = createContext(null);
+export const NodesDispatchContext = createContext(null);
 
 export default App;
