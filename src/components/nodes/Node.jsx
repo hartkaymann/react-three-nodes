@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import Draggable from "react-draggable";
 import { NodesDispatchContext } from "../../App";
 import { ColorInput, Input, NumberInput, Vec2Input, Vec3Input } from "../Input"
 
@@ -20,17 +21,15 @@ function Node(props) {
   })
 
   return (
-    <div
-      id={props.id}
-      className='node'
-      style={{
-        left: props.position.x,
-        top: props.position.y,
-      }}
-    >
-      <p className="title"> {props.title}</p>
-      <ul className='node-inputs'> {inputs} </ul>
-    </div >
+    <Draggable defaultPosition={{ x: props.position.x, y: props.position.y }}>
+      <div
+        id={props.id}
+        className='node'
+      >
+        <p className="title"> {props.title}</p>
+        <ul className='node-inputs'> {inputs} </ul>
+      </div >
+    </Draggable>
   );
 
   function handleChange(e) {
