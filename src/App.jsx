@@ -1,68 +1,25 @@
 import React from 'react';
-import { createContext } from 'react';
-import { useReducer } from 'react';
 import './App.scss';
 
-import { NodeEditor } from "./components/NodeEditor"
-import { Scene } from "./components/Scene"
+import { NodeEditor } from "./NodeEditor"
+import { Scene } from "./Scene"
 
-const ACTIONS = {
-  ADD: 'add',
-  CHANGE: 'change',
-}
 
-function nodesReducer(nodes, action) {
-  switch (action.type) {
-    case ACTIONS.ADD: {
-      return ([
-        ...nodes,
-        {
-          id: 'node-' + nodes.length,
-          position: action.payload.position,
-          type: action.payload.type,
-        }
-      ]);
-    }
-    case ACTIONS.CHANGE: {
-      return nodes.map((node, i) => {
-        if (node.id === action.payload.id) {
-          node.inputs = {
-            ...(node.inputs),
-            [action.payload.name]: action.payload.value
-          }
-        }
-        return node;
-      });
-    }
-    default:
-      return nodes;
-  }
-}
 
 function App(props) {
-  const [nodes, dispatch] = useReducer(nodesReducer, []);
 
   return (
-    <NodesContext.Provider value={nodes}>
-      <NodesDispatchContext.Provider value={dispatch}>
         <div className='split-screen'>
           <div className='pane'>
-            <NodeEditor
-              nodes={nodes}
-            />
+            <NodeEditor/>
           </div>
           <div className='pane'>
             <Scene
-              nodes={nodes}
+              nodes={null}
             />
           </div>
         </div>
-      </NodesDispatchContext.Provider>
-    </NodesContext.Provider>
   );
 }
-
-export const NodesContext = createContext(null);
-export const NodesDispatchContext = createContext(null);
 
 export default App;

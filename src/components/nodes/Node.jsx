@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Draggable from "react-draggable";
-import { NodesDispatchContext } from "../../App";
+import { NodesDispatchContext } from "../../NodeEditor";
 import { ColorInput, Input, NumberInput, Vec2Input, Vec3Input } from "../Input"
 
 function Node(props) {
